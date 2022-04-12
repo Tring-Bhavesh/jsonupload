@@ -1,0 +1,62 @@
+ <html>
+    <head>
+        <title>Form</title>
+        <style>
+            .border{
+                background-color: #ffffff;
+            }
+        </style>
+    </head>
+            <div class="border">
+            <form method="post" action="display.html">
+                <table style="margin: auto;" cellpadding="40">
+                
+                <tr>
+                    <td>JSON file upload:</td><td><input type="file" id="jsnfile" onchange="jsnupload(event);" name="jsnfile"  accept=".json"/></td>
+                </tr>
+                <tr>
+                    <td>Photo:</td>
+                    <td><input type="file" id="profile" onchange="picupload(event);" name="profile" accept="image/*"/></td>
+                    <td><img id="pic"></td>
+                </tr>
+                <tr>
+                    <td><button type="submit" onclick="anotherpage()">Submit</button></td>
+                </tr> 
+            </table>
+            </form>
+        </div>
+</html>
+<script>
+    localStorage.clear();
+    var obj="";
+    var photo="";
+    function jsnupload(event) {
+        var reader = new FileReader();
+        reader.onload = onReaderLoad;
+        reader.readAsText(event.target.files[0]);
+    }
+    function onReaderLoad(event){
+         obj = JSON.parse(event.target.result);
+    }
+    function picupload(event){
+        var tmppath = URL.createObjectURL(event.target.files[0]);
+        var photo = event;
+
+        var image = document.getElementById('pic');
+        image.src=tmppath;
+        image.style.width="150px"
+
+        var reader = new FileReader();
+        reader.addEventListener("load",()=>{
+            localStorage["photo"] = reader.result;
+        })
+        reader.readAsDataURL(event.target.files[0]);
+    }
+    
+    function anotherpage(){
+       json= {
+            "details":obj
+        }
+        localStorage["myobj"] = JSON.stringify(json);
+    }
+</script>
